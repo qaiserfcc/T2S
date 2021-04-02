@@ -1,0 +1,15 @@
+<div class="toolbar" role="banner">
+  <img width="40" class="mt-2" alt="Angular Logo" src="../assets/tts.svg">
+  <span>Text To Speech</span>
+  <div class="spacer"></div>
+  <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" routerLink="/">Home</a>
+      <a class="nav-item nav-link pointer" (click)="logout()">Logout</a>
+    </div>
+  </nav>
+</div>
+<div class="content" role="main">
+
+  <router-outlet></router-outlet>
+</div>

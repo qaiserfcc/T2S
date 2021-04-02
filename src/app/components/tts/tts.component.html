@@ -1,0 +1,103 @@
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="col-md-12">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h6>Welcome {{users ? users[0].firstName : ''}} {{users ? users[0].lastName : ''}} </h6>
+                    <h6>Note* </h6>
+                    <ul *ngIf="users">
+                        <li>Recent Searches will be prior in table.</li>
+                        <li>History which is older than two mins, Automatically will be cleared</li>
+                        <li>At least 10 records will always be persistance regardless of time.</li>
+                        <li>Repeated search will be served from cache.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+
+
+            <form class="mt-4 p-2 col-md-6 mx-auto" [formGroup]="ttsForm" (ngSubmit)="convertToSpeech()">
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" maxlength="50" formControlName="ttsText"
+                                placeholder="Type Here ..." aria-describedby="textInputpp">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="mx-auto mb-3">
+                        <audio *ngIf="speech" [src]="speech | safe:'url'" id="audio" controls #audioTag></audio>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="mx-auto mb-3">
+                        <button [disabled]="!ttsForm.valid" class="btn btn-primary" type="submit">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                            Convert to
+                            speech</button>
+
+                        <button (click)="clearCache()" class="btn btn-primary ml-2" type="button">Clear History</button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+        <div class="col-md-12 p-4">
+
+            <div class="container table-responsive py-5">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Text</th>
+                            <th scope="col">Speech</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let translatedItem of translatedItemsC | keyvalue : orderAscByTimeStamp |  slice: (page-1) * pageSize : page * pageSize; let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{translatedItem.key}} </td>
+                            <td>
+                                <audio *ngIf="translatedItem.value" [src]="translatedItem.value.file | safe:'url'"
+                                    id="audio" controls #audioTag></audio>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="col-md-3 mx-auto">
+                    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="translatedItemsC.size">
+                    </ngb-pagination>
+                </div>
+            </div>
+
+            <!-- <table class="table table-bordered mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Text</th>
+                        <th scope="col">Speech</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let translatedItem of translatedItemsC | keyvalue |  slice: (page-1) * pageSize : page * pageSize; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{translatedItem.key}} </td>
+                        <td>
+                            <audio *ngIf="translatedItem.value" [src]="translatedItem.value.file | safe:'url'"
+                                id="audio" controls #audioTag></audio>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
+
+        </div>
+
+    </div>
+</div>
